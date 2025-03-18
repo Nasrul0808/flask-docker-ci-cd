@@ -17,9 +17,9 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build -t mydockerhubuser/flask-docker-ci-cd .
-          docker tag mydockerhubuser/flask-docker-ci-cd mydockerhubuser/flask-docker-ci-cd:latest
-          docker push mydockerhubuser/flask-docker-ci-cd:latest
+          docker build -t flask-docker-ci-cd .
+          docker tag flask-docker-ci-cd flask-docker-ci-cd:latest
+          docker push flask-docker-ci-cd:latest
 
       - name: Deploy to server (VPS)
-        run: ssh user@server-ip "docker pull mydockerhubuser/flask-docker-ci-cd:latest && docker run -d -p 5000:5000 mydockerhubuser/flask-docker-ci-cd"
+        run: ssh user@server-ip "docker pull flask-docker-ci-cd:latest && docker run -d -p 5000:5000 flask-docker-ci-cd"

@@ -1,25 +1,23 @@
-name: CI/CD Docker Deploy
+name: CI/CD - Build and Push Docker Image
 
 on:
   push:
     branches:
-      - main
+      - main  # Workflow akan berjalan jika ada perubahan di branch main
 
 jobs:
-  deploy:
+  build-and-push:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
-      - name: Login to Docker Hub
+      - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      - name: Build and push Docker image
-        run: |
-          docker build -t flask-docker-ci-cd .
-          docker tag flask-docker-ci-cd flask-docker-ci-cd:latest
-          docker push flask-docker-ci-cd:latest
+      - name: Build Docker Image
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/flask-docker-ci-cd:latest .
 
-      - name: Deploy to server (VPS)
-        run: ssh user@server-ip "docker pull flask-docker-ci-cd:latest && docker run -d -p 5000:5000 flask-docker-ci-cd"
+      - name: Push Docker Image to Docker Hub
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/flask-docker-ci-cd:latest
